@@ -55,3 +55,14 @@ client.on("messageCreate", (message) => {
 });
 
 client.login(TOKEN);
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Bot activo");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Servidor web activo");
+});S
