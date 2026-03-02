@@ -26,7 +26,7 @@ const precios = {
   cambio_color: 4000,
   kit1: 8000,
   kit3: 24000,
-  kit5: 40000,
+  kit5: 40000
 };
 
 client.on("messageCreate", (message) => {
