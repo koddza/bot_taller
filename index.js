@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits } = require('discord.js');
+const express = require('express');
 
 const client = new Client({
   intents: [
@@ -8,10 +9,10 @@ const client = new Client({
   ]
 });
 
-// ⚠️ PEGA TU TOKEN ENTRE LAS COMILLAS
+// TOKEN desde Render
 const TOKEN = process.env.TOKEN;
 
-// Lista de precios
+// ===== LISTA DE PRECIOS =====
 const precios = {
   reparacion: 6000,
   pieza_estetica: 4000,
@@ -22,40 +23,51 @@ const precios = {
   luces_delanteras: 40000,
   neones: 40000,
   ruedas: 4000,
-  stancer: 4000,
+  stancer: 400,
   cambio_color: 4000,
   kit1: 8000,
   kit3: 24000,
   kit5: 40000
 };
 
+// ===== BOT LISTO =====
+client.once("ready", () => {
+  console.log(`Bot conectado como ${client.user.tag}`);
+});
+
+// ===== COMANDO !calcular =====
 client.on("messageCreate", (message) => {
   if (message.author.bot) return;
 
   if (message.content.startsWith("!calcular")) {
+
     const args = message.content.split(" ").slice(1);
     let total = 0;
     let detalle = "";
 
     for (let i = 0; i < args.length; i += 2) {
+
       const servicio = args[i];
       const cantidad = parseInt(args[i + 1]);
 
       if (precios[servicio] && cantidad) {
         const subtotal = precios[servicio] * cantidad;
         total += subtotal;
+
         detalle += `${servicio} x${cantidad} = ${subtotal.toLocaleString()}$\n`;
       }
     }
 
     message.reply(
-      `🧾 PRESUPUESTO:\n\n${detalle}\n💰 TOTAL: ${total.toLocaleString()}$`
+      `📄 PRESUPUESTO:\n\n${detalle}\n💰 TOTAL: ${total.toLocaleString()}$`
     );
   }
 });
 
+// ===== LOGIN DISCORD =====
 client.login(TOKEN);
-const express = require("express");
+
+// ===== SERVIDOR WEB PARA RENDER =====
 const app = express();
 
 app.get("/", (req, res) => {
