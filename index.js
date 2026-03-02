@@ -13,7 +13,7 @@ const TOKEN = process.env.TOKEN;
 
 // Lista de precios
 const precios = {
-  reparacion: 6000,S
+  reparacion: 6000,
   pieza_estetica: 4000,
   full_mantenimiento: 56000,
   pieza_mantenimiento: 8000,
