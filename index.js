@@ -65,6 +65,7 @@ client.on("messageCreate", (message) => {
 });
 
 // ===== LOGIN DISCORD =====
+console.log("TOKEN existe:", TOKEN ? "SI" : "NO");
 client.login(TOKEN);
 
 // ===== SERVIDOR WEB PARA RENDER =====
