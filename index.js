@@ -1,17 +1,16 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const express = require("express");
-const app = express();
 
 console.log("Iniciando aplicación...");
 
-// ===== TOKEN =====
 const TOKEN = process.env.TOKEN;
 
 if (!TOKEN) {
   console.log("❌ TOKEN NO EXISTE");
-} else {
-  console.log("✅ TOKEN detectado");
+  process.exit(1);
 }
+
+console.log("✅ TOKEN detectado");
 
 // ===== CLIENTE DISCORD =====
 const client = new Client({
@@ -22,33 +21,41 @@ const client = new Client({
   ]
 });
 
-console.log("Cliente creado");
-
 client.once("ready", () => {
   console.log("🟢 Bot conectado como " + client.user.tag);
+
+  // SOLO cuando Discord esté listo arrancamos Express
+  iniciarServidorWeb();
 });
 
 client.on("error", (error) => {
   console.error("Error del cliente Discord:", error);
 });
 
-// ===== LOGIN =====
-client.login(TOKEN)
-  .then(() => {
-    console.log("Login enviado a Discord...");
-  })
-  .catch((err) => {
-    console.error("❌ Error al hacer login:");
+async function iniciar() {
+  try {
+    console.log("Intentando login...");
+    await client.login(TOKEN);
+    console.log("Login completado");
+  } catch (err) {
+    console.error("❌ ERROR AL HACER LOGIN:");
     console.error(err);
-  });
+  }
+}
+
+iniciar();
 
 // ===== SERVIDOR WEB =====
-app.get("/", (req, res) => {
-  res.send("Bot activo");
-});
+function iniciarServidorWeb() {
+  const app = express();
 
-const PORT = process.env.PORT || 3000;
+  app.get("/", (req, res) => {
+    res.send("Bot activo");
+  });
 
-app.listen(PORT, () => {
-  console.log("🌐 Servidor web activo en puerto " + PORT);
-});
+  const PORT = process.env.PORT || 3000;
+
+  app.listen(PORT, () => {
+    console.log("🌐 Servidor web activo en puerto " + PORT);
+  });
+}
