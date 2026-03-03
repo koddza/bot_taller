@@ -1,12 +1,10 @@
 const { Client, GatewayIntentBits } = require('discord.js');
-const express = require('express');
-
+const express = require("express");
 const app = express();
 
-// ====== DEBUG INICIO ======
 console.log("Iniciando aplicación...");
 
-// ====== TOKEN ======
+// ===== TOKEN =====
 const TOKEN = process.env.TOKEN;
 
 if (!TOKEN) {
@@ -15,7 +13,7 @@ if (!TOKEN) {
   console.log("✅ TOKEN detectado");
 }
 
-// ====== CLIENTE DISCORD ======
+// ===== CLIENTE DISCORD =====
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -24,20 +22,27 @@ const client = new Client({
   ]
 });
 
+console.log("Cliente creado");
+
 client.once("ready", () => {
-  console.log(`🟢 Bot conectado como ${client.user.tag}`);
+  console.log("🟢 Bot conectado como " + client.user.tag);
 });
 
 client.on("error", (error) => {
   console.error("Error del cliente Discord:", error);
 });
 
-// ====== LOGIN ======
-client.login(TOKEN).catch(err => {
-  console.error("❌ Error al hacer login:", err);
-});
+// ===== LOGIN =====
+client.login(TOKEN)
+  .then(() => {
+    console.log("Login enviado a Discord...");
+  })
+  .catch((err) => {
+    console.error("❌ Error al hacer login:");
+    console.error(err);
+  });
 
-// ====== SERVIDOR WEB ======
+// ===== SERVIDOR WEB =====
 app.get("/", (req, res) => {
   res.send("Bot activo");
 });
